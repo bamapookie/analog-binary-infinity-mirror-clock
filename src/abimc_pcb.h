@@ -1,0 +1,46 @@
+#include <Arduino.h>
+
+// ****************************
+// ABIMC PCB Pin configurations
+// ****************************
+
+#ifndef ABIMC_PCB_H
+#define ABIMC_PCB_H
+
+#if defined ABIMC_V_1_0
+
+#define STRAND_1_CLOCK_PIN PIN_PA13
+#define STRAND_1_DATA_PIN PIN_PA05
+#define STRAND_2_CLOCK_PIN PIN_PA12
+#define STRAND_2_DATA_PIN PIN_PA05
+#define STRAND_3_CLOCK_PIN PIN_PA11
+#define STRAND_3_DATA_PIN PIN_PA05
+#define STRAND_4_CLOCK_PIN PIN_PA10
+#define STRAND_4_DATA_PIN PIN_PA05
+#define STRAND_5_CLOCK_PIN PIN_PA07
+#define STRAND_5_DATA_PIN PIN_PA05
+#define STRAND_6_CLOCK_PIN PIN_PA09
+#define STRAND_6_DATA_PIN PIN_PA05
+#define GPS_SERIAL Serial1
+#define GPS_PPS_PIN PIN_PA04
+
+#else // Default ABIMC_V_1_3
+
+#define STRAND_1_CLOCK_PIN PIN_PA13
+#define STRAND_1_DATA_PIN PIN_PA05
+#define STRAND_2_CLOCK_PIN PIN_PA12
+#define STRAND_2_DATA_PIN PIN_PA05
+#define STRAND_3_CLOCK_PIN PIN_PA11
+#define STRAND_3_DATA_PIN PIN_PA05
+#define STRAND_4_CLOCK_PIN PIN_PA10
+#define STRAND_4_DATA_PIN PIN_PA05
+#define STRAND_5_CLOCK_PIN PIN_PA09
+#define STRAND_5_DATA_PIN PIN_PA05
+#define STRAND_6_CLOCK_PIN PIN_PA07
+#define STRAND_6_DATA_PIN PIN_PA05
+#define GPS_SERIAL Serial1
+#define GPS_PPS_PIN PIN_PA04
+
+#endif
+
+#endif  // ABIMC_PCB_H
