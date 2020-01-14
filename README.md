@@ -1,25 +1,23 @@
-View this project on [CADLAB.io](https://cadlab.io/project/2407). 
-
 # Analog Binary Infinity Mirror Clock
 
 Plans, parts, and code for building your very own clock that no one can read. (Except you... maybe.)
 
 ## The Concept
 
-Everyone knows analog clocks. 2 or 3 hands moving around a clock face, indicating hours, minutes, and sometimes
-seconds. Easy to get a sense of time progressing by watching the hands move around, or gauging the position of one
+Everyone knows analog clocks--2 or 3 hands moving around a clock face, indicating hours, minutes, and sometimes
+seconds. It is easy to get a sense of time progressing by watching the hands move around, or gauging the position of one
 hand in relation to the numbers (or even just the angles) to fill in an appropriate sense of precision.
 
-Most people have seen binary clocks. Several obscure lights flickering on and off in a seemingly random pattern with
+Most people have seen binary clocks--Several obscure lights flickering on and off in a seemingly random pattern with
 no markings to indicate number groupings, then having to decode the lights into a usable number. Some people cheat and
 use Binary Coded Decimal in order to only have to decode one digit at a time.
 
 What the world really needs is a way to combine the obscurity and complexity of decoding a binary number into a usable
 format with the intrinsic sense of progress you get from the movement of the hands of an analog clock.
 
-Thus began my plan to build a Binary Analog Clock! 11 hands moving around a clock face with only a '0' and a '1' to
+Thus began my quest to build a Binary Analog Clock! 11 hands moving around a clock face with only a '0' and a '1' to
 adorn it. Now how the #^%\$% am I going to build a clock with 11 hands? I searched Google. Couldn't find anything
-remotely resembling a kit for building a 11 handed clock. (IKR?) So I sat on it for a while, then I saw an infinity
+remotely resembling a kit for building an 11 handed clock. (IKR?) So I sat on it for a while, then I saw an infinity
 mirror with NeoPixels in it, and it clicked. The infinity mirror effect could look like a line, and radiating in from
 pixels on the outer ring, it could look like a hand. I finally had my plan. I dropped a boatload of money on Adafruit
 and my local MicroCenter (See the materials list below, and thanks LadyAda for having such a fantastic operation.) and
@@ -142,6 +140,9 @@ Designing the Frame
 - https://www.sparkfun.com/products/14414
 - https://www.sparkfun.com/datasheets/GPS/Modules/PMTK_Protocol.pdf
 
+##### Components
+- https://learn.sparkfun.com/tutorials/capacitors/all
+
 ##### Time
 
 - https://www.pjrc.com/teensy/td_libs_Time.html
@@ -156,6 +157,8 @@ Designing the Frame
 - https://learn.adafruit.com/making-pcbs-with-oshpark-and-eagle/ordering-and-assembly
 - https://oshpark.com/
 - http://kicad-pcb.org/download/windows/
+- https://cadlab.io ([My project](https://cadlab.io/project/2407)). 
+
 
 ##### Soldering
 
@@ -165,3 +168,16 @@ Designing the Frame
 
 - https://arduino.stackexchange.com/questions/348/how-to-organize-my-arduino-projects-structure-for-easy-source-control
 - http://www.gammon.com.au/forum/?id=11488
+
+## Addendum
+#### Leap Seconds
+During testing of the GPS is when I discovered the possible occurrence of leap seconds.  Every couple of years, or so, 
+an extra second (or 2) is added to (or removed from) the last minute of June or December, UTC.  So instead of the 
+seconds counting 58, 59, 60/0, 1, 2, etc., they might add an extra second (59, 60, 61/0, 1, 2), an extra 2 seconds 
+(59, 60, 61, 62/0, 1, 2), or take away a second (58, 59/0, 1, 2).  All of this is to keep UTC in sync with UT1, which is 
+the actual time based on the position of the earth in relation to the position of the stars.   UT1 drifts due to tidal 
+forces changing the speed that the earth rotates.  Whenever the difference between UTC and UT1 reaches .9 seconds, leap 
+seconds are used to correct the imbalance.
+
+Unix clocks usually just ignore this.  They just leave the time at 23:59:59 until 00:00:00 eventually gets here.  All of
+the time libraries used in Arduino environments also ignore this, and make no attempt to handle it.
