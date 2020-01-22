@@ -1,5 +1,3 @@
-
-
 #ifndef XA1110_H
 #define XA1110_H
 
@@ -7,5 +5,5 @@
 #define PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ "$PMTK220,10000*2F"          // Output NMEA sentence once every 10 seconds, 100 millihertz.
 #define PMTK_SET_NMEA_OUTPUT_ZDA "$PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0*29" // Set output to ZDA only
 #define PMTK_SET_BAUD_115200 "$PMTK251,115200*1F"
-
+#define PMTK_GET_UTC_CORRECTION_DATA "$PMTK667*35"
 #endif // XA1110_H

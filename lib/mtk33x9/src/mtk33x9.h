@@ -24,7 +24,7 @@ and are Copyrighted by Adafruit Industries.  Their license and copyright are inc
 
 #define PMTK_SET_BAUD_115200 "$PMTK251,115200*1F"
 #define PMTK_SET_BAUD_57600 "$PMTK251,57600*2C"
-#define PMTK_SET_BAUD_57600 "$PMTK251,38400*27"
+#define PMTK_SET_BAUD_38400 "$PMTK251,38400*27"
 #define PMTK_SET_BAUD_19200 "$PMTK251,19200*22"
 #define PMTK_SET_BAUD_14400 "$PMTK251,14400*29"
 #define PMTK_SET_BAUD_9600 "$PMTK251,9600*17"

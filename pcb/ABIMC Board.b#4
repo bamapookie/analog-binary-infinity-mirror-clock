@@ -9,7 +9,7 @@
 <grid distance="25" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
@@ -535,7 +535,7 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <pass name="Default">
 <param name="RoutingGrid" value="6mil"/>
 <param name="AutoGrid" value="1"/>
-<param name="Efforts" value="0"/>
+<param name="Efforts" value="2"/>
 <param name="TopRouterVariant" value="1"/>
 <param name="tpViaShape" value="round"/>
 <param name="PrefDir.1" value="*"/>
@@ -676,19 +676,19 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <attribute name="NAME" x="0.715" y="9.985" size="1.27" layer="25" rot="R270"/>
 <attribute name="SPICEPREFIX" value="B" x="5.715" y="6.35" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
-<element name="GPSPOWER" library="SparkX" package="1X04_NO_SILK" value="PTH" x="78.105" y="5.08" smashed="yes" rot="R90">
-<attribute name="NAME" x="76.073" y="4.064" size="0.6096" layer="25" font="vector" ratio="20" rot="R90"/>
-<attribute name="SPICEPREFIX" value="E" x="78.105" y="5.08" size="1.778" layer="27" rot="R90" display="off"/>
+<element name="GPSPOWER" library="SparkX" package="1X04_NO_SILK" value="PTH" x="78.105" y="10.16" smashed="yes" rot="R90">
+<attribute name="NAME" x="76.073" y="9.144" size="0.6096" layer="25" font="vector" ratio="20" rot="R90"/>
+<attribute name="SPICEPREFIX" value="E" x="78.105" y="10.16" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
-<element name="GPSINT" library="SparkFun-Connectors" package="1X01_NO_SILK" value="" x="78.105" y="2.54" smashed="yes" rot="R90">
-<attribute name="NAME" x="76.2" y="2.667" size="0.6096" layer="25" font="vector" ratio="20" rot="R180"/>
-<attribute name="SPICEPREFIX" value="X" x="78.105" y="2.54" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="VALUE" x="79.883" y="1.27" size="0.6096" layer="27" font="vector" ratio="20" rot="R90"/>
+<element name="GPSINT" library="SparkFun-Connectors" package="1X01_NO_SILK" value="" x="78.105" y="7.62" smashed="yes" rot="R90">
+<attribute name="NAME" x="76.2" y="7.747" size="0.6096" layer="25" font="vector" ratio="20" rot="R180"/>
+<attribute name="SPICEPREFIX" value="X" x="78.105" y="7.62" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="VALUE" x="79.883" y="6.35" size="0.6096" layer="27" font="vector" ratio="20" rot="R90"/>
 </element>
-<element name="GPSTXRX" library="SparkFun-Connectors" package="1X05_NO_SILK" value="" x="56.515" y="2.54" smashed="yes" rot="R90">
-<attribute name="NAME" x="59.563" y="1.905" size="0.6096" layer="25" font="vector" ratio="20" rot="R90"/>
-<attribute name="SPICEPREFIX" value="X" x="56.515" y="2.54" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="VALUE" x="58.547" y="1.27" size="0.6096" layer="27" font="vector" ratio="20" rot="R90"/>
+<element name="GPSTXRX" library="SparkFun-Connectors" package="1X05_NO_SILK" value="" x="56.515" y="7.62" smashed="yes" rot="R90">
+<attribute name="NAME" x="59.563" y="6.985" size="0.6096" layer="25" font="vector" ratio="20" rot="R90"/>
+<attribute name="SPICEPREFIX" value="X" x="56.515" y="7.62" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="VALUE" x="58.547" y="6.35" size="0.6096" layer="27" font="vector" ratio="20" rot="R90"/>
 </element>
 <element name="R1" library="adafruit" package="0204/7" value="7.5k " x="26.035" y="29.21" smashed="yes" rot="R90">
 <attribute name="NAME" x="24.7396" y="26.67" size="0.9906" layer="25" ratio="12" rot="R90"/>
@@ -717,16 +717,14 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="34.925" y1="29.21" x2="21.59" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="15.24" y1="29.21" x2="7.62" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="7.62" y1="29.21" x2="5.08" y2="29.21" width="0.6096" layer="16"/>
-<wire x1="55.245" y1="29.21" x2="50.165" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="39.37" y1="29.21" x2="34.925" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="40.005" y1="29.21" x2="39.37" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="21.59" y1="29.21" x2="20.32" y2="29.21" width="0.6096" layer="16"/>
-<wire x1="64.77" y1="29.21" x2="55.245" y2="29.21" width="0.6096" layer="16"/>
-<wire x1="50.165" y1="29.21" x2="42.545" y2="29.21" width="0.6096" layer="16"/>
+<wire x1="64.77" y1="29.21" x2="47.625" y2="29.21" width="0.6096" layer="16"/>
+<wire x1="47.625" y1="29.21" x2="42.545" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="42.545" y1="29.21" x2="40.005" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="78.105" y1="36.83" x2="78.105" y2="33.655" width="0.6096" layer="16"/>
 <wire x1="5.715" y1="33.655" x2="5.715" y2="4.65" width="0.6096" layer="16"/>
-<wire x1="50.165" y1="29.21" x2="47.625" y2="29.21" width="0.6096" layer="16"/>
 <contactref element="LS1" pad="1"/>
 <contactref element="LS1" pad="10"/>
 <wire x1="15.24" y1="33.02" x2="15.24" y2="29.21" width="0.6096" layer="16"/>
@@ -756,9 +754,8 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="22.225" y1="20.955" x2="19.685" y2="18.415" width="0.6096" layer="16"/>
 <wire x1="64.77" y1="36.83" x2="64.77" y2="33.655" width="0.6096" layer="16"/>
 <wire x1="64.77" y1="33.655" x2="64.77" y2="29.21" width="0.6096" layer="16"/>
-<wire x1="78.105" y1="5.08" x2="78.74" y2="5.08" width="0.6096" layer="16"/>
-<wire x1="80.01" y1="6.35" x2="78.74" y2="5.08" width="0.6096" layer="16"/>
-<wire x1="80.01" y1="6.35" x2="80.01" y2="24.765" width="0.6096" layer="16"/>
+<wire x1="78.105" y1="10.16" x2="80.01" y2="10.16" width="0.6096" layer="16"/>
+<wire x1="80.01" y1="10.16" x2="80.01" y2="24.765" width="0.6096" layer="16"/>
 <wire x1="15.24" y1="25.4" x2="15.24" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="34.925" y1="25.4" x2="34.925" y2="29.21" width="0.6096" layer="16"/>
 <wire x1="64.77" y1="33.655" x2="78.105" y2="33.655" width="0.6096" layer="16"/>
@@ -825,9 +822,9 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <contactref element="GPSTXRX" pad="3"/>
 <wire x1="50.165" y1="15.24" x2="50.8" y2="15.24" width="0.1524" layer="1"/>
 <wire x1="53.34" y1="12.7" x2="50.8" y2="15.24" width="0.1524" layer="1"/>
-<wire x1="53.34" y1="12.7" x2="53.34" y2="10.16" width="0.1524" layer="1"/>
-<wire x1="55.88" y1="7.62" x2="53.34" y2="10.16" width="0.1524" layer="1"/>
-<wire x1="55.88" y1="7.62" x2="56.515" y2="7.62" width="0.1524" layer="1"/>
+<wire x1="53.34" y1="12.7" x2="53.34" y2="-19.05" width="0.1524" layer="1"/>
+<wire x1="56.515" y1="-22.225" x2="53.34" y2="-19.05" width="0.1524" layer="1"/>
+<wire x1="56.515" y1="-22.225" x2="56.515" y2="12.7" width="0.1524" layer="1"/>
 </signal>
 <signal name="TX_D1">
 <contactref element="M4TOP" pad="13"/>
@@ -835,17 +832,12 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="48.768" y1="19.558" x2="47.625" y2="18.415" width="0.1524" layer="1"/>
 <wire x1="47.625" y1="18.415" x2="47.625" y2="17.78" width="0.1524" layer="1"/>
 <wire x1="48.768" y1="19.558" x2="52.197" y2="19.558" width="0.1524" layer="1"/>
-<wire x1="52.197" y1="19.558" x2="58.42" y2="13.335" width="0.1524" layer="1"/>
-<wire x1="58.42" y1="13.335" x2="58.42" y2="11.43" width="0.1524" layer="1"/>
-<wire x1="58.42" y1="11.43" x2="57.15" y2="10.16" width="0.1524" layer="1"/>
-<wire x1="57.15" y1="10.16" x2="56.515" y2="10.16" width="0.1524" layer="1"/>
+<wire x1="52.197" y1="19.558" x2="56.515" y2="15.24" width="0.1524" layer="1"/>
 </signal>
 <signal name="RX_D0">
 <contactref element="M4TOP" pad="14"/>
 <contactref element="GPSTXRX" pad="5"/>
-<wire x1="56.515" y1="12.7" x2="55.88" y2="12.7" width="0.1524" layer="1"/>
-<wire x1="55.88" y1="12.7" x2="50.8" y2="17.78" width="0.1524" layer="1"/>
-<wire x1="50.8" y1="17.78" x2="50.165" y2="17.78" width="0.1524" layer="1"/>
+<wire x1="56.515" y1="17.78" x2="50.165" y2="17.78" width="0.1524" layer="1"/>
 </signal>
 <signal name="D10">
 <contactref element="M4TOP" pad="7"/>
@@ -885,6 +877,11 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <contactref element="LS1" pad="3"/>
 <wire x1="10.16" y1="25.4" x2="10.16" y2="26.67" width="0.1524" layer="1"/>
 <contactref element="JP1" pad="3"/>
+<wire x1="10.2108" y1="31.0896" x2="10.2108" y2="26.67" width="0.1524" layer="1"/>
+<wire x1="8.9916" y1="32.3088" x2="10.2108" y2="31.0896" width="0.1524" layer="1"/>
+<wire x1="8.9916" y1="36.7284" x2="8.9916" y2="32.3088" width="0.1524" layer="1"/>
+<wire x1="10.2108" y1="26.67" x2="10.16" y2="26.67" width="0.1524" layer="1"/>
+<wire x1="8.9916" y1="36.7284" x2="8.89" y2="36.83" width="0.1524" layer="1"/>
 </signal>
 <signal name="DSCLOCK3">
 <contactref element="LS1" pad="8"/>
@@ -953,8 +950,8 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="20.701" y1="0.889" x2="19.685" y2="1.905" width="0.6096" layer="16"/>
 <wire x1="19.685" y1="1.905" x2="19.685" y2="2.54" width="0.6096" layer="16"/>
 <wire x1="20.701" y1="0.889" x2="76.2" y2="0.889" width="0.6096" layer="16"/>
-<wire x1="78.105" y1="7.62" x2="77.47" y2="7.62" width="0.6096" layer="16"/>
-<wire x1="77.47" y1="7.62" x2="76.2" y2="6.35" width="0.6096" layer="16"/>
+<wire x1="78.105" y1="12.7" x2="78.105" y2="8.255" width="0.6096" layer="16"/>
+<wire x1="78.105" y1="8.255" x2="76.2" y2="6.35" width="0.6096" layer="16"/>
 <wire x1="76.2" y1="6.35" x2="76.2" y2="0.889" width="0.6096" layer="16"/>
 </signal>
 <signal name="VHI">

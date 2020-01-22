@@ -723,9 +723,6 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <contactref element="LS1" pad="5"/>
 <contactref element="LS1" pad="13"/>
 <wire x1="38.1" y1="29.21" x2="38.1" y2="33.02" width="0.6096" layer="16"/>
-<wire x1="38.1" y1="33.02" x2="38.1" y2="34.29" width="0.6096" layer="16"/>
-<wire x1="39.37" y1="35.56" x2="38.1" y2="34.29" width="0.6096" layer="16"/>
-<wire x1="39.37" y1="36.83" x2="39.37" y2="35.56" width="0.6096" layer="16"/>
 <wire x1="12.7" y1="29.21" x2="12.7" y2="33.02" width="0.6096" layer="16"/>
 <wire x1="12.7" y1="33.02" x2="12.7" y2="36.83" width="0.6096" layer="16"/>
 <contactref element="C1" pad="2"/>
@@ -746,7 +743,9 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="60.96" y1="31.115" x2="63.295" y2="31.115" width="0.6096" layer="16"/>
 <wire x1="63.295" y1="31.115" x2="63.5" y2="30.91" width="0.6096" layer="16"/>
 <wire x1="67.945" y1="24.765" x2="60.96" y2="24.765" width="0.6096" layer="16"/>
-<wire x1="39.37" y1="36.83" x2="39.37" y2="35.56" width="0" layer="19"/>
+<wire x1="38.1" y1="33.02" x2="38.1" y2="34.29" width="0.6096" layer="16"/>
+<wire x1="38.1" y1="34.29" x2="39.37" y2="35.56" width="0.6096" layer="16"/>
+<wire x1="39.37" y1="35.56" x2="39.37" y2="36.83" width="0.6096" layer="16"/>
 </signal>
 <signal name="D11">
 <contactref element="M4TOP" pad="6"/>
@@ -903,10 +902,9 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <wire x1="18.415" y1="39.37" x2="5.08" y2="39.37" width="0.6096" layer="16"/>
 <wire x1="5.08" y1="39.37" x2="2.54" y2="39.37" width="0.6096" layer="16"/>
 <wire x1="18.415" y1="36.83" x2="18.415" y2="39.37" width="0.6096" layer="16"/>
-<wire x1="31.75" y1="36.83" x2="31.75" y2="39.37" width="0.6096" layer="16"/>
-<wire x1="31.75" y1="39.37" x2="18.415" y2="39.37" width="0.6096" layer="16"/>
 <wire x1="45.085" y1="36.83" x2="45.085" y2="39.37" width="0.6096" layer="16"/>
 <wire x1="45.085" y1="39.37" x2="31.75" y2="39.37" width="0.6096" layer="16"/>
+<wire x1="31.75" y1="39.37" x2="18.415" y2="39.37" width="0.6096" layer="16"/>
 <wire x1="58.42" y1="36.83" x2="58.42" y2="39.37" width="0.6096" layer="16"/>
 <wire x1="58.42" y1="39.37" x2="45.085" y2="39.37" width="0.6096" layer="16"/>
 <wire x1="67.31" y1="29.21" x2="67.31" y2="39.37" width="0.6096" layer="16"/>
@@ -921,16 +919,16 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <contactref element="LS2" pad="14"/>
 <wire x1="65.51" y1="27.41" x2="63.5" y2="27.41" width="0.6096" layer="16"/>
 <wire x1="35.56" y1="33.02" x2="30.48" y2="33.02" width="0.6096" layer="16"/>
-<wire x1="30.48" y1="33.02" x2="30.48" y2="34.29" width="0.6096" layer="16"/>
-<wire x1="31.75" y1="35.56" x2="30.48" y2="34.29" width="0.6096" layer="16"/>
-<wire x1="31.75" y1="36.83" x2="31.75" y2="35.56" width="0.6096" layer="16"/>
 <wire x1="10.16" y1="33.02" x2="10.16" y2="34.163" width="0.6096" layer="16"/>
 <wire x1="10.16" y1="34.163" x2="9.525" y2="34.798" width="0.6096" layer="16"/>
 <contactref element="R1" pad="2"/>
 <contactref element="C1" pad="1"/>
 <wire x1="5.08" y1="25.4" x2="5.08" y2="21.59" width="0.6096" layer="16"/>
 <wire x1="5.08" y1="21.59" x2="5.08" y2="17.78" width="0.6096" layer="16"/>
-<wire x1="31.75" y1="36.83" x2="31.75" y2="35.56" width="0" layer="19"/>
+<wire x1="30.48" y1="33.02" x2="30.48" y2="34.29" width="0.6096" layer="16"/>
+<wire x1="30.48" y1="34.29" x2="31.75" y2="35.56" width="0.6096" layer="16"/>
+<wire x1="31.75" y1="35.56" x2="31.75" y2="36.83" width="0.6096" layer="16"/>
+<wire x1="31.75" y1="36.83" x2="31.75" y2="39.37" width="0.6096" layer="16"/>
 </signal>
 <signal name="+3V3">
 <contactref element="M4BOTTOM" pad="13"/>
@@ -955,10 +953,11 @@ Note, that not all DRC settings must be set by the manufacturer. Several can be 
 <signal name="CLOCK4">
 <contactref element="JP7" pad="3"/>
 <contactref element="LS2" pad="11"/>
-<wire x1="43.18" y1="33.02" x2="43.18" y2="34.925" width="0.1524" layer="1"/>
-<wire x1="43.18" y1="34.925" x2="37.465" y2="34.925" width="0.1524" layer="1"/>
-<wire x1="37.465" y1="34.925" x2="36.83" y2="35.56" width="0.1524" layer="1"/>
+<wire x1="36.83" y1="35.56" x2="37.465" y2="34.925" width="0.1524" layer="1"/>
 <wire x1="36.83" y1="35.56" x2="36.83" y2="36.83" width="0.1524" layer="1"/>
+<wire x1="37.465" y1="34.925" x2="42.545" y2="34.925" width="0.1524" layer="1"/>
+<wire x1="42.545" y1="34.925" x2="43.18" y2="34.29" width="0.1524" layer="1"/>
+<wire x1="43.18" y1="34.29" x2="43.18" y2="33.02" width="0.1524" layer="1"/>
 </signal>
 <signal name="CLOCK2">
 <contactref element="LS1" pad="11"/>
