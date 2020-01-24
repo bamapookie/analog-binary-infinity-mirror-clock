@@ -30,14 +30,14 @@
 #define STRAND_4_OFFSET 0
 #define STRAND_4_MINUTES_PERIOD 16
 #define STRAND_4_HOURS_PERIOD 16
-//#define STRAND_5_PIXELS 48
-//#define STRAND_5_OFFSET 0
-//#define STRAND_5_MINUTES_PERIOD 32
-//#define STRAND_5_HOURS_PERIOD 32
-//#define STRAND_6_PIXELS 24
-//#define STRAND_6_OFFSET 0
-//#define STRAND_6_MINUTES_PERIOD 64
-//#define STRAND_6_HOURS_PERIOD 0
+#define STRAND_5_PIXELS 48
+#define STRAND_5_OFFSET 0
+#define STRAND_5_MINUTES_PERIOD 32
+#define STRAND_5_HOURS_PERIOD 32
+#define STRAND_6_PIXELS 24
+#define STRAND_6_OFFSET 0
+#define STRAND_6_MINUTES_PERIOD 64
+#define STRAND_6_HOURS_PERIOD 0
 
 #define FRACTIONAL_BRIGHTNESS 256
 #define SECOND_HAND_WIDTH 11
@@ -66,8 +66,8 @@
 #define STRAND_2_FRACTIONAL_PIXELS ((STRAND_2_PIXELS) * (FRACTIONAL_BRIGHTNESS))
 #define STRAND_3_FRACTIONAL_PIXELS ((STRAND_3_PIXELS) * (FRACTIONAL_BRIGHTNESS))
 #define STRAND_4_FRACTIONAL_PIXELS ((STRAND_4_PIXELS) * (FRACTIONAL_BRIGHTNESS))
-//#define STRAND_5_FRACTIONAL_PIXELS ((STRAND_5_PIXELS) * (FRACTIONAL_BRIGHTNESS))
-//#define STRAND_6_FRACTIONAL_PIXELS ((STRAND_6_PIXELS) * (FRACTIONAL_BRIGHTNESS))
+#define STRAND_5_FRACTIONAL_PIXELS ((STRAND_5_PIXELS) * (FRACTIONAL_BRIGHTNESS))
+#define STRAND_6_FRACTIONAL_PIXELS ((STRAND_6_PIXELS) * (FRACTIONAL_BRIGHTNESS))
 
 #define STRAND_1_SECOND_HAND_OFFSET ((SECOND_HAND_OFFSET) + (STRAND_1_OFFSET))
 #define STRAND_1_MINUTE_HAND_OFFSET ((MINUTE_HAND_OFFSET) + (STRAND_1_OFFSET))
@@ -81,12 +81,12 @@
 #define STRAND_4_SECOND_HAND_OFFSET ((SECOND_HAND_OFFSET) + (STRAND_4_OFFSET))
 #define STRAND_4_MINUTE_HAND_OFFSET ((MINUTE_HAND_OFFSET) + (STRAND_4_OFFSET))
 #define STRAND_4_HOUR_HAND_OFFSET ((HOUR_HAND_OFFSET) + (STRAND_4_OFFSET))
-//#define STRAND_5_SECOND_HAND_OFFSET ((SECOND_HAND_OFFSET) + (STRAND_5_OFFSET))
-//#define STRAND_5_MINUTE_HAND_OFFSET ((MINUTE_HAND_OFFSET) + (STRAND_5_OFFSET))
-//#define STRAND_5_HOUR_HAND_OFFSET ((HOUR_HAND_OFFSET) + (STRAND_5_OFFSET))
-//#define STRAND_6_SECOND_HAND_OFFSET ((SECOND_HAND_OFFSET) + (STRAND_6_OFFSET))
-//#define STRAND_6_MINUTE_HAND_OFFSET ((MINUTE_HAND_OFFSET) + (STRAND_6_OFFSET))
-//#define STRAND_6_HOUR_HAND_OFFSET ((HOUR_HAND_OFFSET) + (STRAND_6_OFFSET))
+#define STRAND_5_SECOND_HAND_OFFSET ((SECOND_HAND_OFFSET) + (STRAND_5_OFFSET))
+#define STRAND_5_MINUTE_HAND_OFFSET ((MINUTE_HAND_OFFSET) + (STRAND_5_OFFSET))
+#define STRAND_5_HOUR_HAND_OFFSET ((HOUR_HAND_OFFSET) + (STRAND_5_OFFSET))
+#define STRAND_6_SECOND_HAND_OFFSET ((SECOND_HAND_OFFSET) + (STRAND_6_OFFSET))
+#define STRAND_6_MINUTE_HAND_OFFSET ((MINUTE_HAND_OFFSET) + (STRAND_6_OFFSET))
+#define STRAND_6_HOUR_HAND_OFFSET ((HOUR_HAND_OFFSET) + (STRAND_6_OFFSET))
 
 #define MOD(a, b) ((((a) % (b)) + (b)) % (b))
 #define ST(offset, period, pixels, milli) (MOD((offset) + (milli) % (period) * (pixels) / (period), (pixels)))
@@ -97,8 +97,8 @@ CRGB strand1[STRAND_1_PIXELS];  // Outermost
 CRGB strand2[STRAND_2_PIXELS];
 CRGB strand3[STRAND_3_PIXELS];
 CRGB strand4[STRAND_4_PIXELS];
-// CRGB strand5[STRAND_5_PIXELS];
-// CRGB strand6[STRAND_6_PIXELS];  // Innermost
+CRGB strand5[STRAND_5_PIXELS];
+CRGB strand6[STRAND_6_PIXELS];  // Innermost
 
 // Time Stuff
 TimeChangeRule EDT = {"EDT", Second, Sun, Mar, 2, -240};
@@ -155,19 +155,21 @@ void updateStrand(CRGB* strand,
                   unsigned long millis,
                   const CRGB& color) {
   int position = ST(offset, period, pixels, millis);
+  int wholePosition = position / FRACTIONAL_BRIGHTNESS;
+  int fractionalPosition = position % FRACTIONAL_BRIGHTNESS;
   CRGB handRender[width + 1];
   for (auto& i : handRender) {
     i = color;
   }
-  handRender[0].fadeToBlackBy(position % FRACTIONAL_BRIGHTNESS);
-  strand[position / FRACTIONAL_BRIGHTNESS].fadeToBlackBy(FRACTIONAL_BRIGHTNESS - (position % FRACTIONAL_BRIGHTNESS));
-  handRender[width].fadeToBlackBy(FRACTIONAL_BRIGHTNESS - (position % FRACTIONAL_BRIGHTNESS));
-  strand[position / FRACTIONAL_BRIGHTNESS + width].fadeToBlackBy(position % FRACTIONAL_BRIGHTNESS);
+  handRender[0].fadeToBlackBy(fractionalPosition);
+  strand[wholePosition].fadeToBlackBy(FRACTIONAL_BRIGHTNESS - fractionalPosition);
+  handRender[width].fadeToBlackBy(FRACTIONAL_BRIGHTNESS - fractionalPosition);
+  strand[wholePosition + width].fadeToBlackBy(fractionalPosition);
   for (int i = 0; i <= width; i++) {
-    //        if (i != 0 && i != width) {
-    //            strand[position / FRACTIONAL_BRIGHTNESS + i] = CRGB::Black;
-    //        }
-    strand[position / FRACTIONAL_BRIGHTNESS + i] += handRender[i];
+    // if (i != 0 && i != width) {
+    //    strand[position / FRACTIONAL_BRIGHTNESS + i] = CRGB::Black;
+    // }
+    strand[wholePosition + i] += handRender[i];
   }
 }
 
@@ -238,6 +240,12 @@ void setClock() {
   updateStrand(strand4, HOUR_HAND_WIDTH, STRAND_4_HOUR_HAND_OFFSET,
                STRAND_4_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_4_FRACTIONAL_PIXELS, millisSinceStartOfDay,
                CRGB::Red);
+  updateStrand(strand5, HOUR_HAND_WIDTH, STRAND_5_HOUR_HAND_OFFSET,
+               STRAND_5_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_5_FRACTIONAL_PIXELS, millisSinceStartOfDay,
+               CRGB::Red);
+  updateStrand(strand6, HOUR_HAND_WIDTH, STRAND_6_HOUR_HAND_OFFSET,
+               STRAND_6_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_6_FRACTIONAL_PIXELS, millisSinceStartOfDay,
+               CRGB::Red);
 
   // Set minutes on strands
   updateStrand(strand1, MINUTE_HAND_WIDTH, STRAND_1_MINUTE_HAND_OFFSET,
@@ -251,6 +259,12 @@ void setClock() {
                millisSinceStartOfHour, CRGB::Blue);
   updateStrand(strand4, MINUTE_HAND_WIDTH, STRAND_4_MINUTE_HAND_OFFSET,
                STRAND_4_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_4_FRACTIONAL_PIXELS,
+               millisSinceStartOfHour, CRGB::Blue);
+  updateStrand(strand5, MINUTE_HAND_WIDTH, STRAND_5_MINUTE_HAND_OFFSET,
+               STRAND_5_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_5_FRACTIONAL_PIXELS,
+               millisSinceStartOfHour, CRGB::Blue);
+  updateStrand(strand6, MINUTE_HAND_WIDTH, STRAND_6_MINUTE_HAND_OFFSET,
+               STRAND_6_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_6_FRACTIONAL_PIXELS,
                millisSinceStartOfHour, CRGB::Blue);
 
   //   // Set seconds on strands
@@ -275,10 +289,9 @@ void set12oClock() {
   strand2[STRAND_2_PIXELS - 1] = strand2[1] = CRGB::Red;
   strand3[STRAND_3_PIXELS / 2 - 1] = strand3[STRAND_3_PIXELS / 2] = strand3[STRAND_3_PIXELS / 2 + 1] = CRGB::Red;
   strand4[STRAND_4_PIXELS / 2 - 1] = strand4[STRAND_4_PIXELS / 2] = strand4[STRAND_4_PIXELS / 2 + 1] = CRGB::Red;
-  // strand5[STRAND_5_PIXELS - 1] = strand5[1] = CRGB::Red;
-  // strand6[STRAND_6_PIXELS - 1] = strand6[1] = CRGB::Red;
-  strand1[0] = strand2[0] = strand3[0] = strand4[0] = CRGB::Blue;
-  // strand5[0] = strand6[0] = CRGB::Blue;
+  strand5[STRAND_5_PIXELS - 1] = strand5[1] = CRGB::Red;
+  strand6[STRAND_6_PIXELS - 1] = strand6[1] = CRGB::Red;
+  strand1[0] = strand2[0] = strand3[0] = strand4[0] = strand5[0] = strand6[0] = CRGB::Blue;
 }
 
 void setup() {
@@ -286,8 +299,8 @@ void setup() {
   CFastLED::addLeds<APA102, STRAND_2_DATA_PIN, STRAND_2_CLOCK_PIN, BGR>(strand2, STRAND_2_PIXELS);
   CFastLED::addLeds<APA102, STRAND_3_DATA_PIN, STRAND_3_CLOCK_PIN, BGR>(strand3, STRAND_3_PIXELS);
   CFastLED::addLeds<APA102, STRAND_4_DATA_PIN, STRAND_4_CLOCK_PIN, BGR>(strand4, STRAND_4_PIXELS);
-  //   FastLED.addLeds<APA102, STRAND_5_DATA_PIN, STRAND_5_CLOCK_PIN, BGR>(strand5, STRAND_5_PIXELS);
-  //   FastLED.addLeds<APA102, STRAND_6_DATA_PIN, STRAND_6_CLOCK_PIN, BGR>(strand6, STRAND_6_PIXELS);
+  CFastLED::addLeds<APA102, STRAND_5_DATA_PIN, STRAND_5_CLOCK_PIN, BGR>(strand5, STRAND_5_PIXELS);
+  CFastLED::addLeds<APA102, STRAND_6_DATA_PIN, STRAND_6_CLOCK_PIN, BGR>(strand6, STRAND_6_PIXELS);
   GPS_SERIAL.begin(GPS_SERIAL_BAUD_RATE);
   GPS_SERIAL.println(GPS_SERIAL_BAUD_RATE_SENTENCE);
   GPS_SERIAL.println(GPS_FIX_RATE);
@@ -334,12 +347,12 @@ void loop() {
     for (auto& i : strand4) {
       i = CRGB::Black;
     }
-    // for (int i = 0; i < STRAND_5_PIXELS; i++) {
-    //   strand5[i] = CRGB::Black;
-    // }
-    // for (int i = 0; i < STRAND_6_PIXELS; i++) {
-    //   strand6[i] = CRGB::Black;
-    // }
+    for (auto& i : strand5) {
+      i = CRGB::Black;
+    }
+    for (auto& i : strand6) {
+      i = CRGB::Black;
+    }
 
     // Set next refresh (startTimeMillis + 16.67 = 60Hz, startTimeMillis + 10 = 100Hz)
     lastRefreshMillis = startTimeMillis;
