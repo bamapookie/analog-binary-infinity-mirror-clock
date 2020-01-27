@@ -288,13 +288,17 @@ void setClock() {
 }
 
 void set12oClock() {
-  strand1[STRAND_1_PIXELS - 1] = strand1[1] = CRGB::Red;
-  strand2[STRAND_2_PIXELS - 1] = strand2[1] = CRGB::Red;
-  strand3[STRAND_3_PIXELS / 2 - 1] = strand3[STRAND_3_PIXELS / 2] = strand3[STRAND_3_PIXELS / 2 + 1] = CRGB::Red;
-  strand4[STRAND_4_PIXELS / 2 - 1] = strand4[STRAND_4_PIXELS / 2] = strand4[STRAND_4_PIXELS / 2 + 1] = CRGB::Red;
-  strand5[STRAND_5_PIXELS - 1] = strand5[1] = CRGB::Red;
-  strand6[STRAND_6_PIXELS - 1] = strand6[1] = CRGB::Red;
-  strand1[0] = strand2[0] = strand3[0] = strand4[0] = strand5[0] = strand6[0] = CRGB::Blue;
+  uint8_t hueOffset = (millis() / (SPECTRUM_CYCLE_PERIOD_SECONDS * 4)) % 256;
+  strand1[STRAND_1_PIXELS - 1] = strand1[1] = strand4[0] = CHSV(hueOffset, 255, 255);
+  strand2[STRAND_2_PIXELS - 1] = strand2[1] = strand5[0] = CHSV(hueOffset + 32, 255, 255);
+  strand3[STRAND_3_PIXELS / 2 - 1] = strand3[STRAND_3_PIXELS / 2] = strand3[STRAND_3_PIXELS / 2 + 1] = strand6[0] =
+      CHSV(hueOffset + 64, 255, 255);
+  strand4[STRAND_4_PIXELS / 2 - 1] = strand4[STRAND_4_PIXELS / 2] = strand4[STRAND_4_PIXELS / 2 + 1] =
+      CHSV(hueOffset + 96, 255, 255);
+  strand5[STRAND_5_PIXELS - 1] = strand5[1] = CHSV(hueOffset + 128, 255, 255);
+  strand6[STRAND_6_PIXELS - 1] = strand6[1] = strand1[0] = CHSV(hueOffset + 160, 255, 255);
+  strand2[0] = CHSV(hueOffset + 192, 255, 255);
+  strand3[0] = CHSV(hueOffset + 224, 255, 255);
 }
 
 void setup() {
