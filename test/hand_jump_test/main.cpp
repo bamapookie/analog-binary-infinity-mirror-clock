@@ -10,7 +10,7 @@
 #include <abimc_pcb.h>
 #include <xa1110.h>
 
-#define DEBUG
+#define DEBUG_HAND_JUMPING
 //
 // Settings
 // LED Settings
@@ -151,6 +151,12 @@ void updateStrand(CRGB* strand,
     int position = ST(offset, period, pixels * (FRACTIONAL_BRIGHTNESS - 1), millis);
     int wholePosition = position / (FRACTIONAL_BRIGHTNESS - 1);
     int fractionalPosition = position % (FRACTIONAL_BRIGHTNESS - 1);
+#if defined DEBUG || defined DEBUG_HAND_JUMPING
+    if (offset == STRAND_1_MINUTE_HAND_OFFSET && pixels == STRAND_1_PIXELS) {
+      Serial.printf("Millis: %6d Position: %5d Whole Position: %3d Fractional Position: %3d\n", (int)(millis % period), position,
+                    wholePosition, fractionalPosition);
+    }
+#endif
     CRGB handRender[width + 1];
     for (auto& i : handRender) {
       i = color;
