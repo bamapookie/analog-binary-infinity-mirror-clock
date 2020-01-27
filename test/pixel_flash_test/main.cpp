@@ -56,11 +56,11 @@
 #define GPS_SERIAL_BAUD_RATE_SENTENCE PMTK_SET_BAUD_115200
 
 // Computed values from settings
-// Offsets from the computed time.  Used to align the center of the hand with the center of the pixel.
-//
-#define SECOND_HAND_OFFSET (((1 - (SECOND_HAND_WIDTH)) * (FRACTIONAL_BRIGHTNESS - 1)) / 2)
-#define MINUTE_HAND_OFFSET (((1 - (MINUTE_HAND_WIDTH)) * (FRACTIONAL_BRIGHTNESS - 1)) / 2)
-#define HOUR_HAND_OFFSET (((1 - (HOUR_HAND_WIDTH)) * (FRACTIONAL_BRIGHTNESS - 1)) / 2)
+// Offsets from the computed time.  Used to align the center of the hand with
+// the center of the pixel.
+#define SECOND_HAND_OFFSET (((1 - (SECOND_HAND_WIDTH)) * (FRACTIONAL_BRIGHTNESS)) / 2)
+#define MINUTE_HAND_OFFSET (((1 - (MINUTE_HAND_WIDTH)) * (FRACTIONAL_BRIGHTNESS)) / 2)
+#define HOUR_HAND_OFFSET (((1 - (HOUR_HAND_WIDTH)) * (FRACTIONAL_BRIGHTNESS)) / 2)
 
 #define STRAND_1_FRACTIONAL_PIXELS ((STRAND_1_PIXELS) * (FRACTIONAL_BRIGHTNESS - 1))
 #define STRAND_2_FRACTIONAL_PIXELS ((STRAND_2_PIXELS) * (FRACTIONAL_BRIGHTNESS - 1))
@@ -165,12 +165,62 @@ void updateStrand(CRGB* strand,
   // strand[wholePosition].fadeToBlackBy(FRACTIONAL_BRIGHTNESS - fractionalPosition);
   handRender[width].fadeToBlackBy(FRACTIONAL_BRIGHTNESS - 1 - fractionalPosition);
   // strand[wholePosition + width].fadeToBlackBy(fractionalPosition);
+#if defined DEBUG || defined DEBUG_PIXEL_FLASH
+  int redDebug = 0;
+  int greenDebug = 0;
+  int blueDebug = 0;
+#endif
   for (int i = 0; i <= width; i++) {
     // if (i != 0 && i != width) {
     //    strand[position / FRACTIONAL_BRIGHTNESS + i] = CRGB::Black;
     // }
     strand[wholePosition + i] += handRender[i];
+#if defined DEBUG || defined DEBUG_PIXEL_FLASH
+    redDebug += handRender[i].r;
+    greenDebug += handRender[i].g;
+    blueDebug += handRender[i].b;
+#endif
   }
+#if defined DEBUG || defined DEBUG_PIXEL_FLASH
+  if (pixels == STRAND_1_FRACTIONAL_PIXELS) {
+    Serial.write("Position: ");
+    Serial.printf("%5d", position);
+    Serial.write(" Whole Position: ");
+    Serial.printf("%3d", wholePosition);
+    Serial.write(" Fractional Position: ");
+    Serial.printf("%3d", fractionalPosition);
+    // Serial.write(" Pixels: ");
+    // Serial.printf("%6d", pixels);
+    // Serial.write(" Width: ");
+    // Serial.printf("%4d", width);
+    // Serial.write(" Red: ");
+    // Serial.printf("%4d", redDebug);
+    // Serial.write(" Green: ");
+    // Serial.printf("%4d", greenDebug);
+    // Serial.write(" Blue: ");
+    // Serial.printf("%4d", blueDebug);
+    if (redDebug > 0) {
+      Serial.write(" Red: [");
+      for (int i = 0; i < width; i++) {
+        Serial.printf("%3d, ", handRender[i].r);
+      }
+      Serial.printf("%3d]", handRender[width].r);
+    } else if (greenDebug > 0) {
+      Serial.write(" Green: [");
+      for (int i = 0; i < width; i++) {
+        Serial.printf("%3d, ", handRender[i].g);
+      }
+      Serial.printf("%3d]", handRender[width].g);
+    } else if (blueDebug > 0) {
+      Serial.write(" Blue: [");
+      for (int i = 0; i < width; i++) {
+        Serial.printf("%3d, ", handRender[i].b);
+      }
+      Serial.printf("%3d]", handRender[width].b);
+    }
+    Serial.println();
+  }
+#endif
 }
 
 void updateStrandSeconds(CRGB* strand,
@@ -217,7 +267,7 @@ void setClock() {
   }
   // Determine hand positions
   unsigned long millisSinceStartOfMinute = displayMillis - displayStartOfMinuteMillis;
-  unsigned long millisSinceStartOfSecond = millisSinceStartOfMinute % 1000;
+  // unsigned long millisSinceStartOfSecond = millisSinceStartOfMinute % 1000;
   unsigned long millisSinceStartOfHour = (displayTime % 3600) * 1000 + millisSinceStartOfMinute;
 
   // Strand 1
@@ -308,7 +358,7 @@ void setup() {
   GPS_SERIAL.println(GPS_OUTPUT);
   GPS_SERIAL.println();
   attachInterrupt(digitalPinToInterrupt(GPS_PPS_PIN), pps, RISING);
-#ifdef DEBUG
+#if defined DEBUG || defined DEBUG_REFRESH || defined DEBUG_PIXEL_FLASH
   Serial.begin(9600);
 #endif
 }
@@ -317,7 +367,7 @@ void setup() {
 unsigned long startTimeMillis;
 unsigned long lastRefreshMillis;
 
-#ifdef DEBUG
+#if defined DEBUG || defined DEBUG_REFRESH
 unsigned long debugRefreshSum = 0;
 unsigned long debugRefreshCount = 0;
 #endif
@@ -357,7 +407,7 @@ void loop() {
     // Set next refresh (startTimeMillis + 16.67 = 60Hz, startTimeMillis + 10 = 100Hz)
     lastRefreshMillis = startTimeMillis;
 
-#ifdef DEBUG
+#if defined DEBUG || defined DEBUG_REFRESH
     debugRefreshSum += millis() - startTimeMillis;
     debugRefreshCount++;
 #endif
@@ -388,7 +438,7 @@ void loop() {
         ppsStartOfMinuteMillis = ppsStartOfSecondMillis - (seconds * 1000);
       }
     }
-#ifdef DEBUG
+#if defined DEBUG || defined DEBUG_REFRESH
     Serial.printf("Delay in ms: %d\n", millis() - ppsStartOfMinuteMillis - milliseconds);
     Serial.printf("Display time in ms: %d.%03d\n", (debugRefreshSum * 1000 / debugRefreshCount) / 1000,
                   (debugRefreshSum * 1000 / debugRefreshCount) % 1000);
