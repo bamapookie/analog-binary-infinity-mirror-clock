@@ -10,7 +10,7 @@
 #include <abimc_pcb.h>
 #include <xa1110.h>
 
-#define DEBUG_PIXEL_FLASH
+#define DEBUG
 //
 // Settings
 // LED Settings
@@ -45,7 +45,7 @@
 #define MINUTE_HAND_WIDTH 1
 #define HOUR_HAND_WIDTH 3
 #define REFRESH_RATE_HZ 50
-
+#define SPECTRUM_CYCLE_PERIOD_SECONDS 8
 #define REFRESH_INTERVAL_MILLIS (1000 / REFRESH_RATE_HZ)
 
 // GPS Settings
@@ -220,6 +220,9 @@ void setClock() {
   unsigned long millisSinceStartOfSecond = millisSinceStartOfMinute % 1000;
   unsigned long millisSinceStartOfHour = (displayTime % 3600) * 1000 + millisSinceStartOfMinute;
 
+  // Determine color offset (PERIOD_IN_SECONDS * 1024 milliseconds / 256 colors in range)
+  uint8_t hueOffset = (displayMillis / (SPECTRUM_CYCLE_PERIOD_SECONDS * 4)) % 256;
+
   // Strand 1
   // start point of hand (minute) = 1/2 of brightness - 1/2 of width of hand + (millisSinceStartOfHour % millisInPeriod)
   // / millisPerFractionalPixel
@@ -230,57 +233,57 @@ void setClock() {
   // matches the period of the current hour.
   updateStrand(strand1, HOUR_HAND_WIDTH, STRAND_1_HOUR_HAND_OFFSET,
                STRAND_1_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_1_FRACTIONAL_PIXELS, millisSinceStartOfDay,
-               CRGB::Red);
+               CHSV(hueOffset, 255, 255));
   updateStrand(strand2, HOUR_HAND_WIDTH, STRAND_2_HOUR_HAND_OFFSET,
                STRAND_2_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_2_FRACTIONAL_PIXELS, millisSinceStartOfDay,
-               CRGB::Red);
+               CHSV(hueOffset + 32, 255, 255));
   updateStrand(strand3, HOUR_HAND_WIDTH, STRAND_3_HOUR_HAND_OFFSET,
                STRAND_3_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_3_FRACTIONAL_PIXELS, millisSinceStartOfDay,
-               CRGB::Red);
+               CHSV(hueOffset + 64, 255, 255));
   updateStrand(strand4, HOUR_HAND_WIDTH, STRAND_4_HOUR_HAND_OFFSET,
                STRAND_4_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_4_FRACTIONAL_PIXELS, millisSinceStartOfDay,
-               CRGB::Red);
+               CHSV(hueOffset + 96, 255, 255));
   updateStrand(strand5, HOUR_HAND_WIDTH, STRAND_5_HOUR_HAND_OFFSET,
                STRAND_5_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_5_FRACTIONAL_PIXELS, millisSinceStartOfDay,
-               CRGB::Red);
+               CHSV(hueOffset + 128, 255, 255));
   updateStrand(strand6, HOUR_HAND_WIDTH, STRAND_6_HOUR_HAND_OFFSET,
                STRAND_6_HOURS_PERIOD * secondsInCurrentHour() * 1000, STRAND_6_FRACTIONAL_PIXELS, millisSinceStartOfDay,
-               CRGB::Red);
+               CHSV(hueOffset + 160, 255, 255));
 
   // Set minutes on strands
   updateStrand(strand1, MINUTE_HAND_WIDTH, STRAND_1_MINUTE_HAND_OFFSET,
                STRAND_1_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_1_FRACTIONAL_PIXELS,
-               millisSinceStartOfHour, CRGB::Blue);
+               millisSinceStartOfHour, CHSV(hueOffset + 160, 255, 255));
   updateStrand(strand2, MINUTE_HAND_WIDTH, STRAND_2_MINUTE_HAND_OFFSET,
                STRAND_2_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_2_FRACTIONAL_PIXELS,
-               millisSinceStartOfHour, CRGB::Blue);
+               millisSinceStartOfHour, CHSV(hueOffset + 192, 255, 255));
   updateStrand(strand3, MINUTE_HAND_WIDTH, STRAND_3_MINUTE_HAND_OFFSET,
                STRAND_3_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_3_FRACTIONAL_PIXELS,
-               millisSinceStartOfHour, CRGB::Blue);
+               millisSinceStartOfHour, CHSV(hueOffset + 224, 255, 255));
   updateStrand(strand4, MINUTE_HAND_WIDTH, STRAND_4_MINUTE_HAND_OFFSET,
                STRAND_4_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_4_FRACTIONAL_PIXELS,
-               millisSinceStartOfHour, CRGB::Blue);
+               millisSinceStartOfHour, CHSV(hueOffset, 255, 255));
   updateStrand(strand5, MINUTE_HAND_WIDTH, STRAND_5_MINUTE_HAND_OFFSET,
                STRAND_5_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_5_FRACTIONAL_PIXELS,
-               millisSinceStartOfHour, CRGB::Blue);
+               millisSinceStartOfHour, CHSV(hueOffset + 32, 255, 255));
   updateStrand(strand6, MINUTE_HAND_WIDTH, STRAND_6_MINUTE_HAND_OFFSET,
                STRAND_6_MINUTES_PERIOD * secondsInMinute(displayTime) * 1000, STRAND_6_FRACTIONAL_PIXELS,
-               millisSinceStartOfHour, CRGB::Blue);
+               millisSinceStartOfHour, CHSV(hueOffset + 64, 255, 255));
 
   //   // Set seconds on strands
   //   if (millisSinceStartOfSecond < SECOND_HAND_PULSE_DURATION_MILLIS) {
   //     updateStrandSeconds(strand1, displayTime, millisSinceStartOfMinute, millisSinceStartOfSecond,
   //                         millisSinceStartOfHour, STRAND_1_SECOND_HAND_OFFSET, STRAND_1_MINUTES_PERIOD,
-  //                         STRAND_1_FRACTIONAL_PIXELS, CHSV(85, 255, 0));
+  //                         STRAND_1_FRACTIONAL_PIXELS, CHSV(hueOffset + 96, 255, 255));
   //     updateStrandSeconds(strand2, displayTime, millisSinceStartOfMinute, millisSinceStartOfSecond,
   //                         millisSinceStartOfHour, STRAND_2_SECOND_HAND_OFFSET, STRAND_2_MINUTES_PERIOD,
-  //                         STRAND_2_FRACTIONAL_PIXELS, CHSV(85, 255, 0));
+  //                         STRAND_2_FRACTIONAL_PIXELS, CHSV(hueOffset + 128, 255, 255));
   //     updateStrandSeconds(strand3, displayTime, millisSinceStartOfMinute, millisSinceStartOfSecond,
   //                         millisSinceStartOfHour, STRAND_3_SECOND_HAND_OFFSET, STRAND_3_MINUTES_PERIOD,
-  //                         STRAND_3_FRACTIONAL_PIXELS, CHSV(85, 255, 0));
+  //                         STRAND_3_FRACTIONAL_PIXELS, CHSV(hueOffset + 160, 255, 255));
   //     updateStrandSeconds(strand4, displayTime, millisSinceStartOfMinute, millisSinceStartOfSecond,
   //                         millisSinceStartOfHour, STRAND_4_SECOND_HAND_OFFSET, STRAND_4_MINUTES_PERIOD,
-  //                         STRAND_4_FRACTIONAL_PIXELS, CHSV(85, 255, 0));
+  //                         STRAND_4_FRACTIONAL_PIXELS, CHSV(hueOffset + 192, 255, 255));
   //   }
 }
 
