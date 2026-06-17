@@ -8,6 +8,7 @@
 #define ABIMC_V_1_3
 
 #include <abimc_pcb.h>
+#include <abimc_render.h>
 #include <xa1110.h>
 
 #define DEBUG
@@ -151,24 +152,15 @@ void updateStrand(CRGB* strand,
                   int pixels,
                   unsigned long long millis,
                   const CRGB& color) {
-  if (period > 0) {
-    int position = ST(offset, period, pixels * (FRACTIONAL_BRIGHTNESS - 1), millis);
-    int wholePosition = position / (FRACTIONAL_BRIGHTNESS - 1);
-    int fractionalPosition = position % (FRACTIONAL_BRIGHTNESS - 1);
-    CRGB handRender[width + 1];
-    for (auto& i : handRender) {
-      i = color;
-    }
-    handRender[0].fadeToBlackBy(fractionalPosition);
-    // strand[wholePosition].fadeToBlackBy(FRACTIONAL_BRIGHTNESS - fractionalPosition);
-    handRender[width].fadeToBlackBy(FRACTIONAL_BRIGHTNESS - 1 - fractionalPosition);
-    // strand[wholePosition + width].fadeToBlackBy(fractionalPosition);
-    for (int i = 0; i <= width; i++) {
-      // if (i != 0 && i != width) {
-      //    strand[position / FRACTIONAL_BRIGHTNESS + i] = CRGB::Black;
-      // }
-      strand[MOD(wholePosition + i, pixels)] += handRender[i];
-    }
+  // Geometry (which pixels, and the sub-pixel fading of the leading/trailing
+  // edges) lives in the host-tested abimc_render library; here we just apply the
+  // colour with FastLED. Behaviour matches the original inline math.
+  abimc::HandContribution contributions[abimc::MAX_HAND_WIDTH + 1];
+  int count = abimc::computeHand(width, offset, period, pixels, millis, contributions);
+  for (int i = 0; i < count; i++) {
+    CRGB faded = color;
+    faded.fadeToBlackBy(contributions[i].fadeBy);
+    strand[contributions[i].index] += faded;
   }
 }
 

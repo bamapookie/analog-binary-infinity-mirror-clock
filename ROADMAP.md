@@ -63,11 +63,17 @@ Break the monolithic `main.cpp` into reusable, host-testable libraries. The key
 win is making the time and rendering logic framework-agnostic so it can be unit
 tested on a PC via `pio test`, turning `test/` into real tests.
 
+A `native` PlatformIO env plus a `test/test_render/` suite now exist, and CI runs
+`pio test -e native` on every push, so the host-test pipeline is live.
+
 - `AbimcTimekeeper` — leap-second-aware, sub-second UTC clock with pluggable time
   *sources* (PPS-disciplined GPS today; NTP/RTC later) behind one interface.
-- `AbimcRender` — pure logic: time -> per-ring binary bit -> hand angle, with
-  fractional-pixel anti-aliasing and the seconds ripple. Operates on an abstract
-  pixel buffer so it has no FastLED dependency.
+- `abimc_render` — pure, FastLED-free rendering math. **Started:** the hand
+  geometry (`computeHand`: positions + sub-pixel leading/trailing fade + ring
+  wrap) is extracted from `updateStrand()` and unit tested on the host; the
+  firmware now calls it and only applies colour. **Still to move in:** the
+  per-ring binary-bit selection, the seconds "ripple", and the planned motion
+  rules (capped-speed slewing, 60-on-64 catch-up, leap-second pacing).
 - `AbimcConfig` — settings model (seconds on/off, timezone, custom-tz rules) plus
   persistence. Back-end for the magnet UI below.
 - `abimc_pcb` — already a library; keep, versioned per board revision.
