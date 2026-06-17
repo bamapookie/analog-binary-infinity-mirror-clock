@@ -26,18 +26,20 @@ isn't lost again. Items are grouped into tracks; tracks can progress in parallel
 - [ ] Add continuous integration that builds the firmware with PlatformIO.
 - [ ] Pin `lib_deps` versions for reproducible builds.
 - [ ] **Firmware correctness pass** (from the resurrection audit):
-  - [ ] Mark ISR-shared globals `volatile` (`ppsStartOfSecondMillis`,
+  - [x] Mark ISR-shared globals `volatile` (`ppsStartOfSecondMillis`,
         `ppsStartOfMinuteMillis`, `currentMinute`, `nextLeapMinute`,
         `numberOfLeapSeconds`).
-  - [ ] Fix the "torn read" guard in `setClock()` (currently compares a value to
-        itself and only re-reads once).
-  - [ ] Bound the array writes in `updateStrandSeconds()` (currently can index
-        past the end of a ring) before re-enabling the seconds feature.
+  - [x] Fix the "torn read" guard in `setClock()` (replaced the self-comparison
+        with a `noInterrupts()` snapshot of the minute/start-of-minute pair).
+  - [x] Bound the array writes in `updateStrandSeconds()` (now wraps with `MOD`)
+        so the seconds feature is safe to re-enable.
   - [ ] Actually populate `numberOfLeapSeconds` / `nextLeapMinute` from the parsed
         GPS leap-second fields, or remove the dead parsing — today the leap-second
         feature is wired up but never fed any data.
   - [ ] Finish or remove the commented-out seconds "ripple" rendering.
-  - [ ] Polish the VCR `12:00` flash for the no-signal state.
+  - [x] Polish the VCR `12:00` flash for the no-signal state — reviewed; the loop
+        already blinks `set12oClock()` at ~1 Hz while GPS time is invalid, which is
+        the intended VCR behavior. No change needed beyond confirming it.
 
 ## Track B — Library extraction (next)
 

@@ -115,12 +115,16 @@ TinyGPSCustom pmtk667LeapSecondUtcWeekNumber(gps, "GNZDA", 8);
 TinyGPSCustom pmtk667LeapSecondDayOfWeek(gps, "GNZDA", 9);
 TinyGPSCustom pmtk667NewLeapSecondOffset(gps, "GNZDA", 10);
 
-time_t currentMinute = 0;
-time_t nextLeapMinute = 0;
-int numberOfLeapSeconds = 0;
-unsigned long ppsStartOfSecondMillis;  // Used for drift calculation
-unsigned long ppsStartOfMinuteMillis;  // Used with currentMinute to get complete millisecond precision time, accounting
-// for leap seconds
+// These are shared between the PPS interrupt (pps()) and the main loop, so they
+// must be volatile to stop the compiler from caching stale copies in registers.
+// On this 32-bit MCU aligned word accesses are atomic, so individual reads are
+// safe; setClock() additionally snapshots the related pair under noInterrupts().
+volatile time_t currentMinute = 0;
+volatile time_t nextLeapMinute = 0;
+volatile int numberOfLeapSeconds = 0;
+volatile unsigned long ppsStartOfSecondMillis = 0;  // Used for drift calculation
+volatile unsigned long ppsStartOfMinuteMillis = 0;  // Used with currentMinute to get complete millisecond precision
+// time, accounting for leap seconds
 
 unsigned long secondsInMinute(time_t minute) {
   return 60 + ((minute % 60) == (nextLeapMinute % 60) ? numberOfLeapSeconds : 0);
@@ -195,24 +199,30 @@ void updateStrandSeconds(CRGB* strand,
   if ((millisSinceStartOfMinute / 1000) % 2 > 0) {
     int secondHand = ST(offset, period * secondsInMinute(displayTime) * 1000, pixels, millisSinceStartOfHour);
     for (int i = 0; i < SECOND_HAND_WIDTH + 1; i++) {
-      strand[secondHand + i] += secondHandRender[i];
+      // Wrap around the ring like updateStrand() does; secondHand + i can run
+      // past the end of the strand otherwise.
+      strand[MOD(secondHand + i, pixels)] += secondHandRender[i];
     }
   }
 }
 
 void setClock() {
-  // Get timestamp
+  // Take a consistent snapshot of the values the PPS interrupt updates. The
+  // interrupt writes currentMinute and ppsStartOfMinuteMillis together on a
+  // minute rollover, so copy the pair with interrupts disabled to avoid reading
+  // one of them from before the rollover and the other from after.
+  noInterrupts();
+  time_t snapshotMinute = currentMinute;
   unsigned long displayStartOfMinuteMillis = ppsStartOfMinuteMillis;
-  time_t displayTime = myTZ.toLocal(currentMinute);
+  interrupts();
+
+  time_t displayTime = myTZ.toLocal(snapshotMinute);
   unsigned long displayMillis = millis();
-  if (displayStartOfMinuteMillis != ppsStartOfMinuteMillis) {
-    displayStartOfMinuteMillis = ppsStartOfMinuteMillis;
-    displayTime = myTZ.toLocal(currentMinute);
-    displayMillis = millis();
-  }
+
   // Determine hand positions
   unsigned long millisSinceStartOfMinute = displayMillis - displayStartOfMinuteMillis;
   unsigned long millisSinceStartOfSecond = millisSinceStartOfMinute % 1000;
+  (void)millisSinceStartOfSecond;  // consumed by the (currently disabled) seconds-hand render below
   unsigned long millisSinceStartOfHour = (displayTime % 3600) * 1000 + millisSinceStartOfMinute;
 
   // Determine color offset (PERIOD_IN_SECONDS * 1024 milliseconds / 256 colors in range)
