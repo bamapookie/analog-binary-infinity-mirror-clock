@@ -71,7 +71,10 @@ Concrete behaviors `AbimcRender` (and the no-signal display) must implement:
   all hands should point straight up. After such a hand passes the bottom of its
   ring, speed it up slightly so it reaches the top exactly as the minutes roll
   over to `:00`. (Verify whether the current `ST()`/period math already does
-  this — believed not yet implemented.)
+  this — believed not yet implemented.) The same catch-up applies one level down
+  to the **seconds within a minute**: 60 seconds mapped onto a power-of-two
+  period second hand must likewise speed up after the bottom so it reaches the
+  top exactly as the second hand completes the minute.
 - **Leap-second pacing.** Conversely, during a minute that contains a leap second
   the hands should move one second slower (or faster, for a removed second) so a
   61- (or 59-) second minute still lands the hands correctly at the rollover.
