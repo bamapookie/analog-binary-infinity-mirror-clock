@@ -2,6 +2,12 @@
 
 Plans, parts, and code for building your very own clock that no one can read. (Except you... maybe.)
 
+> **Status:** Resurrecting an abandoned build. The firmware targets an Adafruit
+> ItsyBitsy M4 (SAMD51) driving six APA102/DotStar rings, disciplined by a GPS
+> module so it never needs to be set. See [`ROADMAP.md`](ROADMAP.md) for what's
+> planned next (library extraction, a desk-sized revision, and magnet-based
+> configuration). Project boards on [CADLAB.io](https://cadlab.io/project/2407).
+
 ## The Concept
 
 Everyone knows analog clocks--2 or 3 hands moving around a clock face, indicating hours, minutes, and sometimes
@@ -72,8 +78,8 @@ and a 1 meter length DotStar Strip.
 
 #### Phase 1 - Testing the components
 
-Using the default strandtest.ino from Adafruit with minor modifications, I tested out the DotStar strips. (See the extras
-folder for strandtest.ino.)
+Using the default strandtest.ino from Adafruit with minor modifications, I tested out the DotStar strips. (See the
+[`examples/`](examples/) folder for the strand and GPS bring-up sketches.)
 
 PPS Test
 
@@ -181,3 +187,27 @@ seconds are used to correct the imbalance.
 
 Unix clocks usually just ignore this.  They just leave the time at 23:59:59 until 00:00:00 eventually gets here.  All of
 the time libraries used in Arduino environments also ignore this, and make no attempt to handle it.
+
+## Repository Layout
+
+- `src/` — the clock firmware (`main.cpp`).
+- `lib/` — project libraries: board pin maps (`abimc_pcb`) and GPS command sets (`xa1110`, `mtk33x9`).
+- `examples/` — standalone bring-up sketches for the LEDs and GPS (see [`examples/README.md`](examples/README.md)).
+- `test/` — reserved for PlatformIO unit tests.
+- `pcb/` — Autodesk EAGLE schematic and board files.
+- `images/` — clock-face artwork (SVG/XCF).
+
+## Building
+
+This is a [PlatformIO](https://platformio.org/) project. With the PlatformIO CLI installed:
+
+```sh
+pio run                 # build the firmware
+pio run --target upload # flash a connected ItsyBitsy M4
+pio device monitor      # open the serial monitor
+```
+
+## License
+
+Dual-licensed: firmware under the MIT License, hardware (PCB and artwork) under
+CERN-OHL-S v2. See [`LICENSE.md`](LICENSE.md) for details.
