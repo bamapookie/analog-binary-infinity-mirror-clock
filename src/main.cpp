@@ -209,15 +209,18 @@ void updateStrandSeconds(CRGB* strand,
 void setClock() {
   // Take a consistent snapshot of the values the PPS interrupt updates. The
   // interrupt writes currentMinute and ppsStartOfMinuteMillis together on a
-  // minute rollover, so copy the pair with interrupts disabled to avoid reading
-  // one of them from before the rollover and the other from after.
+  // minute rollover, so copy them with interrupts disabled to avoid reading one
+  // of them from before the rollover and the other from after. millis() is read
+  // inside the same critical section so the "now" reference shares the same time
+  // base -- otherwise a rollover in the gap could make millisSinceStartOfMinute
+  // exceed 60s for a frame.
   noInterrupts();
   time_t snapshotMinute = currentMinute;
   unsigned long displayStartOfMinuteMillis = ppsStartOfMinuteMillis;
+  unsigned long displayMillis = millis();
   interrupts();
 
   time_t displayTime = myTZ.toLocal(snapshotMinute);
-  unsigned long displayMillis = millis();
 
   // Determine hand positions
   unsigned long millisSinceStartOfMinute = displayMillis - displayStartOfMinuteMillis;
