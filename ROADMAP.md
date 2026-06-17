@@ -56,6 +56,31 @@ tested on a PC via `pio test`, turning `test/` into real tests.
   persistence. Back-end for the magnet UI below.
 - `abimc_pcb` — already a library; keep, versioned per board revision.
 
+### Renderer motion & display rules (planned)
+
+Concrete behaviors `AbimcRender` (and the no-signal display) must implement:
+
+- **Hands never jump.** Define a `MAX_HAND_SPEED` (always greater than the
+  fastest *normal* speed of the 1-minute hand) and, whenever a hand's target
+  position differs from where it is now, advance it toward the target at that
+  capped speed instead of snapping. This smooths out time corrections and the
+  catch-up below.
+- **60 minutes on a 64-"minute" ring.** The rings run on power-of-two periods
+  (…32, 64), so a 64-period ring only travels 60/64 of the way around in a real
+  hour and would sit ~4 minutes short of the top at the turn of the hour, when
+  all hands should point straight up. After such a hand passes the bottom of its
+  ring, speed it up slightly so it reaches the top exactly as the minutes roll
+  over to `:00`. (Verify whether the current `ST()`/period math already does
+  this — believed not yet implemented.)
+- **Leap-second pacing.** Conversely, during a minute that contains a leap second
+  the hands should move one second slower (or faster, for a removed second) so a
+  61- (or 59-) second minute still lands the hands correctly at the rollover.
+  This ties into wiring up `numberOfLeapSeconds` / `nextLeapMinute`.
+- **Timezone-aware no-signal flash.** The "no time acquired yet" flash is
+  normally `12:00` (VCR style), but it should depend on the active timezone /
+  custom profile: when the **Margaritaville** timezone is in effect, flash `17`
+  ("it's 5 o'clock somewhere") instead of `12`.
+
 ## Track C — Hardware v2 (deferred; no hardware change yet)
 
 Captured for when we're ready. Current decision is to **keep the existing
