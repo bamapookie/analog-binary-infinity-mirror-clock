@@ -76,11 +76,6 @@ void loop() {
     color4.h = (color4.h + 224) % 256;
   }
   tail4 = (tail4 + 1) % STRAND_4_PIXELS;
-  if (++head4 >= STRAND_4_PIXELS) {
-    head4 %= STRAND_4_PIXELS;
-    color4.h = (color4.h + 224) % 256;
-  }
-  tail4 = (tail4 + 1) % STRAND_4_PIXELS;
   if (++head5 >= STRAND_5_PIXELS) {
     head5 %= STRAND_5_PIXELS;
     color5.h = (color5.h + 224) % 256;
